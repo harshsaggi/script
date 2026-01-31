@@ -5,329 +5,49 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- LOADING SCREEN
-local function CreateLoadingScreen()
-    local LoadingGui = Instance.new("ScreenGui")
-    LoadingGui.Name = "MEVHubLoading"
-    LoadingGui.ResetOnSpawn = false
-    LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    LoadingGui.IgnoreGuiInset = true
-    LoadingGui.Parent = PlayerGui
-    
-    local Background = Instance.new("Frame")
-    Background.Name = "Background"
-    Background.Size = UDim2.new(1, 0, 1, 0)
-    Background.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-    Background.BorderSizePixel = 0
-    Background.Parent = LoadingGui
-    
-    local UIGradient = Instance.new("UIGradient")
-    UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 40)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(30, 30, 60)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 30))
-    })
-    UIGradient.Rotation = 45
-    UIGradient.Parent = Background
-    
-    local ParticlesFrame = Instance.new("Frame")
-    ParticlesFrame.Name = "Particles"
-    ParticlesFrame.Size = UDim2.new(1, 0, 1, 0)
-    ParticlesFrame.BackgroundTransparency = 1
-    ParticlesFrame.Parent = Background
-    
-    for i = 1, 20 do
-        spawn(function()
-            local particle = Instance.new("Frame")
-            particle.Name = "Particle" .. i
-            particle.Size = UDim2.new(0, math.random(3, 8), 0, math.random(3, 8))
-            particle.Position = UDim2.new(math.random(), 0, math.random(), 0)
-            particle.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
-            particle.BorderSizePixel = 0
-            particle.BackgroundTransparency = math.random(5, 8) / 10
-            particle.Parent = ParticlesFrame
-            
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(1, 0)
-            corner.Parent = particle
-            
-            while LoadingGui.Parent do
-                local newPos = UDim2.new(math.random(), 0, math.random(), 0)
-                local tween = TweenService:Create(particle, TweenInfo.new(math.random(3, 6), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                    Position = newPos,
-                    BackgroundTransparency = math.random(5, 9) / 10
-                })
-                tween:Play()
-                tween.Completed:Wait()
-            end
-        end)
-    end
-    
-    local CenterContainer = Instance.new("Frame")
-    CenterContainer.Name = "CenterContainer"
-    CenterContainer.Size = UDim2.new(0, 400, 0, 300)
-    CenterContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-    CenterContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-    CenterContainer.BackgroundTransparency = 1
-    CenterContainer.Parent = Background
-    
-    local LogoCircle = Instance.new("Frame")
-    LogoCircle.Name = "LogoCircle"
-    LogoCircle.Size = UDim2.new(0, 100, 0, 100)
-    LogoCircle.Position = UDim2.new(0.5, 0, 0.2, 0)
-    LogoCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-    LogoCircle.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
-    LogoCircle.BorderSizePixel = 0
-    LogoCircle.Parent = CenterContainer
-    
-    local LogoCorner = Instance.new("UICorner")
-    LogoCorner.CornerRadius = UDim.new(1, 0)
-    LogoCorner.Parent = LogoCircle
-    
-    local LogoGlow = Instance.new("ImageLabel")
-    LogoGlow.Name = "Glow"
-    LogoGlow.Size = UDim2.new(1.5, 0, 1.5, 0)
-    LogoGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    LogoGlow.AnchorPoint = Vector2.new(0.5, 0.5)
-    LogoGlow.BackgroundTransparency = 1
-    LogoGlow.Image = "rbxassetid://5028857084"
-    LogoGlow.ImageColor3 = Color3.fromRGB(138, 43, 226)
-    LogoGlow.ImageTransparency = 0.5
-    LogoGlow.Parent = LogoCircle
-    
-    local VolleyballEmoji = Instance.new("TextLabel")
-    VolleyballEmoji.Name = "Emoji"
-    VolleyballEmoji.Size = UDim2.new(1, 0, 1, 0)
-    VolleyballEmoji.BackgroundTransparency = 1
-    VolleyballEmoji.Text = "V"
-    VolleyballEmoji.TextSize = 50
-    VolleyballEmoji.Font = Enum.Font.GothamBlack
-    VolleyballEmoji.TextColor3 = Color3.fromRGB(255, 255, 255)
-    VolleyballEmoji.Parent = LogoCircle
-    
-    local Title = Instance.new("TextLabel")
-    Title.Name = "Title"
-    Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.Position = UDim2.new(0.5, 0, 0.45, 0)
-    Title.AnchorPoint = Vector2.new(0.5, 0.5)
-    Title.BackgroundTransparency = 1
-    Title.Text = "MEV HUB"
-    Title.TextSize = 42
-    Title.Font = Enum.Font.GothamBlack
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextTransparency = 1
-    Title.Parent = CenterContainer
-    
-    local TitleGradient = Instance.new("UIGradient")
-    TitleGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(138, 43, 226))
-    })
-    TitleGradient.Parent = Title
-    
-    local Subtitle = Instance.new("TextLabel")
-    Subtitle.Name = "Subtitle"
-    Subtitle.Size = UDim2.new(1, 0, 0, 25)
-    Subtitle.Position = UDim2.new(0.5, 0, 0.55, 0)
-    Subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
-    Subtitle.BackgroundTransparency = 1
-    Subtitle.Text = "Current Supported Games: 1"
-    Subtitle.TextSize = 18
-    Subtitle.Font = Enum.Font.Gotham
-    Subtitle.TextColor3 = Color3.fromRGB(180, 180, 180)
-    Subtitle.TextTransparency = 1
-    Subtitle.Parent = CenterContainer
-    
-    local Creator = Instance.new("TextLabel")
-    Creator.Name = "Creator"
-    Creator.Size = UDim2.new(1, 0, 0, 20)
-    Creator.Position = UDim2.new(0.5, 0, 0.65, 0)
-    Creator.AnchorPoint = Vector2.new(0.5, 0.5)
-    Creator.BackgroundTransparency = 1
-    Creator.Text = "Created by blue2k"
-    Creator.TextSize = 16
-    Creator.Font = Enum.Font.GothamMedium
-    Creator.TextColor3 = Color3.fromRGB(138, 43, 226)
-    Creator.TextTransparency = 1
-    Creator.Parent = CenterContainer
-    
-    local LoadingBarBg = Instance.new("Frame")
-    LoadingBarBg.Name = "LoadingBarBg"
-    LoadingBarBg.Size = UDim2.new(0.7, 0, 0, 8)
-    LoadingBarBg.Position = UDim2.new(0.5, 0, 0.8, 0)
-    LoadingBarBg.AnchorPoint = Vector2.new(0.5, 0.5)
-    LoadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    LoadingBarBg.BorderSizePixel = 0
-    LoadingBarBg.Parent = CenterContainer
-    
-    local LoadingBarBgCorner = Instance.new("UICorner")
-    LoadingBarBgCorner.CornerRadius = UDim.new(1, 0)
-    LoadingBarBgCorner.Parent = LoadingBarBg
-    
-    local LoadingBarFill = Instance.new("Frame")
-    LoadingBarFill.Name = "Fill"
-    LoadingBarFill.Size = UDim2.new(0, 0, 1, 0)
-    LoadingBarFill.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
-    LoadingBarFill.BorderSizePixel = 0
-    LoadingBarFill.Parent = LoadingBarBg
-    
-    local LoadingBarFillCorner = Instance.new("UICorner")
-    LoadingBarFillCorner.CornerRadius = UDim.new(1, 0)
-    LoadingBarFillCorner.Parent = LoadingBarFill
-    
-    local LoadingGradient = Instance.new("UIGradient")
-    LoadingGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 100, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(138, 43, 226))
-    })
-    LoadingGradient.Parent = LoadingBarFill
-    
-    local LoadingText = Instance.new("TextLabel")
-    LoadingText.Name = "LoadingText"
-    LoadingText.Size = UDim2.new(1, 0, 0, 20)
-    LoadingText.Position = UDim2.new(0.5, 0, 0.88, 0)
-    LoadingText.AnchorPoint = Vector2.new(0.5, 0.5)
-    LoadingText.BackgroundTransparency = 1
-    LoadingText.Text = "Loading..."
-    LoadingText.TextSize = 14
-    LoadingText.Font = Enum.Font.Gotham
-    LoadingText.TextColor3 = Color3.fromRGB(150, 150, 150)
-    LoadingText.Parent = CenterContainer
-    
-    local SpinRing = Instance.new("ImageLabel")
-    SpinRing.Name = "SpinRing"
-    SpinRing.Size = UDim2.new(0, 130, 0, 130)
-    SpinRing.Position = UDim2.new(0.5, 0, 0.2, 0)
-    SpinRing.AnchorPoint = Vector2.new(0.5, 0.5)
-    SpinRing.BackgroundTransparency = 1
-    SpinRing.Image = "rbxassetid://11419725435"
-    SpinRing.ImageColor3 = Color3.fromRGB(138, 43, 226)
-    SpinRing.ImageTransparency = 0.3
-    SpinRing.Parent = CenterContainer
-    
-    spawn(function()
-        while LoadingGui.Parent do
-            SpinRing.Rotation = SpinRing.Rotation + 2
-            RunService.RenderStepped:Wait()
-        end
-    end)
-    
-    spawn(function()
-        while LoadingGui.Parent do
-            local pulseOut = TweenService:Create(LogoCircle, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Size = UDim2.new(0, 110, 0, 110)
-            })
-            pulseOut:Play()
-            pulseOut.Completed:Wait()
-            
-            local pulseIn = TweenService:Create(LogoCircle, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Size = UDim2.new(0, 100, 0, 100)
-            })
-            pulseIn:Play()
-            pulseIn.Completed:Wait()
-        end
-    end)
-    
-    spawn(function()
-        local rotation = 0
-        while LoadingGui.Parent do
-            rotation = rotation + 1
-            TitleGradient.Rotation = rotation
-            LoadingGradient.Rotation = rotation * 2
-            wait(0.03)
-        end
-    end)
-    
-    wait(0.5)
-    
-    TweenService:Create(Title, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        TextTransparency = 0
-    }):Play()
-    
-    wait(0.3)
-    
-    TweenService:Create(Subtitle, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        TextTransparency = 0
-    }):Play()
-    
-    wait(0.3)
-    
-    TweenService:Create(Creator, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        TextTransparency = 0
-    }):Play()
-    
-    wait(0.3)
-    
-    local loadingSteps = {
-        {text = "Initializing...", progress = 0.2},
-        {text = "Loading modules...", progress = 0.4},
-        {text = "Preparing features...", progress = 0.6},
-        {text = "Setting up UI...", progress = 0.8},
-        {text = "Almost ready...", progress = 0.95},
-        {text = "Done!", progress = 1}
-    }
-    
-    for _, step in ipairs(loadingSteps) do
-        LoadingText.Text = step.text
-        TweenService:Create(LoadingBarFill, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Size = UDim2.new(step.progress, 0, 1, 0)
-        }):Play()
-        wait(0.5)
-    end
-    
-    wait(0.3)
-    
-    TweenService:Create(Background, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 1
-    }):Play()
-    
-    for _, child in pairs(CenterContainer:GetChildren()) do
-        if child:IsA("TextLabel") then
-            TweenService:Create(child, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                TextTransparency = 1
-            }):Play()
-        elseif child:IsA("Frame") then
-            TweenService:Create(child, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 1
-            }):Play()
-        elseif child:IsA("ImageLabel") then
-            TweenService:Create(child, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                ImageTransparency = 1
-            }):Play()
-        end
-    end
-    
-    TweenService:Create(LogoCircle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 1
-    }):Play()
-    
-    TweenService:Create(SpinRing, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        ImageTransparency = 1
-    }):Play()
-    
-    TweenService:Create(LogoGlow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        ImageTransparency = 1
-    }):Play()
-    
-    TweenService:Create(VolleyballEmoji, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        TextTransparency = 1
-    }):Play()
-    
-    wait(0.8)
-    
-    LoadingGui:Destroy()
-end
-
-CreateLoadingScreen()
-
 -- LOAD RAYFIELD
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
+-- LOAD SAVED CONFIG
+local function loadConfig()
+    local success, result = pcall(function()
+        return Rayfield:GetConfiguration("MEVHub", "VolleyballLegends")
+    end)
+    
+    if success and result then
+        if result.HitboxToggle ~= nil then
+            HitboxEnabled = result.HitboxToggle
+        end
+        if result.HitboxSize then
+            HitboxSize = result.HitboxSize
+        end
+        if result.HitboxColor then
+            HitboxColor = result.HitboxColor
+        end
+        if result.JumpESPToggle ~= nil then
+            JumpESPEnabled = result.JumpESPToggle
+        end
+        if result.JumpESPColor then
+            JumpESPColor = result.JumpESPColor
+        end
+        if result.PredictAimToggle ~= nil then
+            PredictAimEnabled = result.PredictAimToggle
+        end
+        if result.PredictAimColor then
+            PredictAimColor = result.PredictAimColor
+        end
+        if result.PredictAimLength then
+            PredictAimLength = result.PredictAimLength
+        end
+        if result.AutoStrongServeToggle ~= nil then
+            AutoStrongServeEnabled = result.AutoStrongServeToggle
+        end
+    end
+end
+
 -- VARIABLES
-local HitboxEnabled = false
-local HitboxSize = 5.9
+local HitboxEnabled = true
+local HitboxSize = 10
 local HitboxColor = Color3.fromRGB(0, 255, 0)
 
 local JumpESPEnabled = false
@@ -335,12 +55,14 @@ local JumpESPColor = Color3.fromRGB(255, 0, 0)
 
 local PredictAimEnabled = true
 local PredictAimColor = Color3.fromRGB(255, 255, 0)
-local PredictAimLength = 15
+local PredictAimLength = 25
 
 local AutoStrongServeEnabled = false
 
 local JumpESPObjects = {}
 local PredictAimObjects = {}
+
+loadConfig()
 
 -- FUNCTIONS
 local function getPlayerTeam(player)
@@ -442,7 +164,7 @@ local function createPredictLine(player)
     end
     
     local lookVector = rootPart.CFrame.LookVector
-    local spikeDirection = (lookVector + Vector3.new(0, -0.5, 0)).Unit
+    local spikeDirection = lookVector.Unit
     
     local line = Instance.new("Part")
     line.Name = "PredictLine"
@@ -470,7 +192,7 @@ local function createPredictLine(player)
     point.Shape = Enum.PartType.Ball
     point.Transparency = 0.3
     point.Position = endPos
-    point.Parent = workspace
+    -- point.Parent = workspace -- Commented out to remove the ball
     
     PredictAimObjects[player] = {
         Line = line,
@@ -492,7 +214,7 @@ local function updatePredictLine(player)
     
     if PredictAimObjects[player] then
         local lookVector = rootPart.CFrame.LookVector
-        local spikeDirection = (lookVector + Vector3.new(0, -0.5, 0)).Unit
+        local spikeDirection = lookVector.Unit
         
         local startPos = head.Position + Vector3.new(0, 1, 0)
         local endPos = startPos + (spikeDirection * PredictAimLength)
@@ -556,6 +278,7 @@ local function modifyBallHitbox()
                     if existingHitbox then
                         existingHitbox.Size = Vector3.new(HitboxSize, HitboxSize, HitboxSize)
                         existingHitbox.Color = HitboxColor
+                        existingHitbox.Material = Enum.Material.Neon
                         existingHitbox.CFrame = part.CFrame
                     else
                         local hitbox = Instance.new("Part")
@@ -563,6 +286,7 @@ local function modifyBallHitbox()
                         hitbox.Size = Vector3.new(HitboxSize, HitboxSize, HitboxSize)
                         hitbox.Transparency = 0.8
                         hitbox.Color = HitboxColor
+                        hitbox.Material = Enum.Material.Neon
                         hitbox.CanCollide = false
                         hitbox.CanTouch = true
                         hitbox.Massless = true
@@ -661,14 +385,10 @@ RunService.RenderStepped:Connect(function()
         pcall(function()
             for _, player in pairs(Players:GetPlayers()) do
                 if isEnemy(player) then
-                    if isJumping(player) then
-                        if not PredictAimObjects[player] then
-                            createPredictLine(player)
-                        else
-                            updatePredictLine(player)
-                        end
+                    if not PredictAimObjects[player] then
+                        createPredictLine(player)
                     else
-                        removePredictLine(player)
+                        updatePredictLine(player)
                     end
                 end
             end
@@ -717,7 +437,7 @@ MainTab:CreateSection("Ball Hitbox")
 
 MainTab:CreateToggle({
     Name = "Enable Ball Hitbox",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "HitboxToggle",
     Callback = function(Value)
         HitboxEnabled = Value
@@ -745,7 +465,7 @@ MainTab:CreateSlider({
     Range = {1, 20},
     Increment = 0.5,
     Suffix = " studs",
-    CurrentValue = 5.9,
+    CurrentValue = 10,
     Flag = "HitboxSize",
     Callback = function(Value)
         HitboxSize = Value
@@ -827,7 +547,7 @@ MainTab:CreateSection("Predict Aim")
 
 MainTab:CreateToggle({
     Name = "Enable Predict Aim",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "PredictAimToggle",
     Callback = function(Value)
         PredictAimEnabled = Value
@@ -855,7 +575,7 @@ MainTab:CreateSlider({
     Range = {5, 50},
     Increment = 1,
     Suffix = " studs",
-    CurrentValue = 15,
+    CurrentValue = 25,
     Flag = "PredictAimLength",
     Callback = function(Value)
         PredictAimLength = Value
