@@ -333,7 +333,7 @@ local HitboxColor = Color3.fromRGB(0, 255, 0)
 local JumpESPEnabled = false
 local JumpESPColor = Color3.fromRGB(255, 0, 0)
 
-local PredictAimEnabled = false
+local PredictAimEnabled = true
 local PredictAimColor = Color3.fromRGB(255, 255, 0)
 local PredictAimLength = 15
 
